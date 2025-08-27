@@ -1,0 +1,67 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_TEXTIO.ALL;
+use STD.TEXTIO.ALL;
+
+entity tb_not_gate is
+end entity;
+
+architecture test of tb_not_gate is
+
+  -- Componentes y señales
+  signal A_sig : std_logic := '0';
+  signal Y_sig : std_logic;
+
+  -- Instancia de la compuerta NOT
+  component not_gate
+    Port (
+      A : in  std_logic;
+      Y : out std_logic
+    );
+  end component;
+
+begin
+
+  -- Instancia
+  UUT: not_gate port map (
+    A => A_sig,
+    Y => Y_sig
+  );
+
+  -- Proceso de prueba
+  stimulus: process
+  begin
+    -- CASO 1: A = '0' → Y debería ser '1'
+    A_sig <= '0';
+    wait for 10 ns;
+
+    -- Mostrar mensaje de prueba
+    report "Tiempo: " & time'image(now) severity note;
+    report "A = " & std_logic'image(A_sig) & 
+           " => Y = " & std_logic'image(Y_sig) severity note;
+
+    -- Verificar el resultado
+    assert (Y_sig = '1')
+      report "Error: A = 0 debería producir Y = 1"
+      severity error;
+
+    -- CASO 2: A = '1' → Y debería ser '0'
+    A_sig <= '1';
+    wait for 10 ns;
+
+    report "Tiempo: " & time'image(now) severity note;
+    report "A = " & std_logic'image(A_sig) & 
+           " => Y = " & std_logic'image(Y_sig) severity note;
+
+    assert (Y_sig = '0')
+      report "Error: A = 1 debería producir Y = 0"
+      severity error;
+
+    -- Finalización de la prueba
+    report "Prueba completada con éxito" severity note;
+    assert false report "Fin de la simulación" severity failure;
+
+    wait;
+  end process;
+
+end architecture;
