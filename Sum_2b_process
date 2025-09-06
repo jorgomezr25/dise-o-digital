@@ -1,0 +1,21 @@
+library IEEE; 
+use IEEE.STD_LOGIC_1164.ALL; 
+use IEEE.NUMERIC_STD.ALL; 
+ 
+entity sumador_2bits_process is 
+    Port ( 
+        A_in  : in  unsigned(1 downto 0); 
+        B_in  : in  unsigned(1 downto 0); 
+        S_out : out unsigned(2 downto 0) 
+); 
+end sumador_2bits_process;
+
+architecture Behavioral of sumador_2bits_process is 
+begin 
+    process (A_in, B_in) 
+        variable suma_var : unsigned(2 downto 0); 
+    begin 
+        suma_var := ('0' & A_in) + ('0' & B_in); 
+        S_out <= suma_var; 
+    end process; 
+end Behavioral;
