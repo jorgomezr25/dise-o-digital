@@ -1,0 +1,46 @@
+ibrary IEEE; 
+use IEEE.STD_LOGIC_1164.ALL; 
+ 
+entity tb_DFF is 
+end tb_DFF; 
+ 
+architecture sim of tb_DFF is 
+    signal clk   : std_logic := '0'; 
+    signal reset : std_logic := '0'; 
+    signal D     : std_logic := '0'; 
+    signal Q     : std_logic; 
+begin 
+ 
+    -- Instancia del flip-flop D 
+    UUT: entity work.DFF 
+        port map (clk, reset, D, Q); 
+ 
+    -- Generador de reloj (10 ns periodo) 
+    clk_process: process 
+    begin 
+        while now < 100 ns loop 
+            clk <= '0'; wait for 5 ns; 
+            clk <= '1'; wait for 5 ns; 
+        end loop; 
+        wait; 
+    end process; 
+ 
+    -- Estímulos de prueba 
+    stim_proc: process 
+    begin 
+        -- Inicialmente en 0 
+        D <= '0'; reset <= '1'; wait for 12 ns;  -- Activa reset 
+        reset <= '0'; wait for 10 ns; 
+ 
+        -- Probar capturas de D 
+        D <= '1'; wait for 20 ns;  -- Q debe volverse 1 en el siguiente flanco 
+        D <= '0'; wait for 20 ns;  -- Q debe volverse 0 en el siguiente flanco 
+ 
+        -- Reset en medio de la operación 
+        reset <= '1'; wait for 10 ns; 
+        reset <= '0'; wait for 20 ns; 
+ 
+        wait; 
+    end process; 
+ 
+end sim; 
